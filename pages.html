@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ptype2 - Typing Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div id="welcome-page" class="page-container">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">WELCOME TO THE GAME</h2>
+            
+            <p class="welcome-message">
+                Test your typing speed and accuracy through challenging levels!<br>
+                Sign up to save your progress or play as a guest.
+            </p>
+            
+            <div class="button-group">
+                <button id="signup-btn" class="btn">
+                    SIGN UP
+                </button>
+                <button id="login-btn" class="btn btn-secondary">
+                    SIGN IN
+                </button>
+                <button id="guest-btn" class="btn btn-secondary">
+                    PLAY AS GUEST
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signup-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">CREATE ACCOUNT</h2>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <input id="signup-username" type="text" required>
+                    <label for="signup-username">Username</label>
+                    <div class="input-icon">👤</div>
+                </div>
+                
+                <div class="input-group">
+                    <input id="signup-password" type="password" required>
+                    <label for="signup-password">Password</label>
+                    <div class="input-icon">🔒</div>
+                </div>
+                
+                <div class="input-group">
+                    <input id="signup-password-confirm" type="password" required>
+                    <label for="signup-password-confirm">Confirm Password</label>
+                    <div class="input-icon">✅</div>
+                </div>
+                
+                <button id="signup-submit" class="btn">
+                    <span class="btn-text">JOIN THE GAME</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            
+            <div class="footer-link">
+                Already have an account? <a href="#" id="go-to-login">Sign In</a>
+            </div>
+            
+            <div id="signup-status" class="status-message hidden">
+                <div class="status-icon">⚠️</div>
+                <div class="status-text"></div>
+            </div>
+        </div>
+        
+        <button id="back-btn" class="btn btn-secondary" style="margin-top: 20px;">
+            ← Back to Welcome
+        </button>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">WELCOME BACK</h2>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <input id="login-username" type="text" required>
+                    <label for="login-username">Username</label>
+                    <div class="input-icon">👤</div>
+                </div>
+                
+                <div class="input-group">
+                    <input id="login-password" type="password" required>
+                    <label for="login-password">Password</label>
+                    <div class="input-icon">🔒</div>
+                </div>
+                
+                <button id="login-submit" class="btn">
+                    <span class="btn-text">SIGN IN</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            
+            <div class="footer-link">
+                Don't have an account? <a href="#" id="go-to-signup">Sign Up</a>
+            </div>
+            
+            <div id="login-status" class="status-message hidden">
+                <div class="status-icon">⚠️</div>
+                <div class="status-text"></div>
+            </div>
+        </div>
+        
+        <button id="back-btn-login" class="btn btn-secondary" style="margin-top: 20px;">
+            ← Back to Welcome
+        </button>
+    </div>
+
+    <div id="profile-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">MY PROFILE</h2>
+            
+            <div class="profile-content">
+                <div class="profile-picture">
+                    <img src="https://i.imgur.com/JqYeXZk.png" alt="Profile" id="profile-img">
+                    <button id="change-picture" class="btn-icon">🖼️</button>
+                </div>
+                
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span id="profile-username" class="info-value">Guest</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Levels Completed:</span>
+                        <span id="levels-completed" class="info-value">0/10</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Typing Speed:</span>
+                        <span id="typing-speed" class="info-value">0 WPM</span>
+                    </div>
+                </div>
+                
+                <button id="play-levels-btn" class="btn" style="margin-top: 30px;">
+                    PLAY LEVELS →
+                </button>
+            </div>
+            
+            <button id="logout-btn" class="btn btn-secondary" style="margin-top: 20px;">
+                ← Sign Out
+            </button>
+        </div>
+    </div>
+    
+    <!-- Levels Page -->
+    <div id="levels-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">SELECT LEVEL</h2>
+            
+            <div class="levels-grid">
+                <!-- Levels 1-10 will be generated by JavaScript -->
+            </div>
+            
+            <button id="back-to-profile" class="btn btn-secondary" style="margin-top: 20px;">
+                ← Back to Profile
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Page -->
+<div id="game-page" class="page-container" style="display:none;">
+    <div class="card">
+        <div class="logo-header">
+            <span class="logo-p">p</span>
+            <span class="logo-type">type</span>
+            <span class="logo-2">2</span>
+        </div>
+        
+        <h2 class="title">LEVEL <span id="current-level">1</span></h2>
+        
+        <div class="game-stats">
+            <div class="stat">
+                <span class="stat-label">WPM:</span>
+                <span id="wpm-stat" class="stat-value">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Accuracy:</span>
+                <span id="accuracy-stat" class="stat-value">100%</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Time:</span>
+                <span id="time-stat" class="stat-value">0s</span>
+            </div>
+        </div>
+        
+        <div id="game-container">
+            <div id="text-display"></div>
+            <input type="text" id="text-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <div id="progress-bar"></div>
+        </div>
+        
+        <button id="back-to-levels" class="btn btn-secondary" style="margin-top: 20px;">
+            ← Back to Levels
+        </button>
+    </div>
+</div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="javascript.js"></script>
+</body>
+</html>
