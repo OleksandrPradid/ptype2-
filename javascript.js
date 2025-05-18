@@ -2,98 +2,106 @@ document.addEventListener('DOMContentLoaded', function() {
     // ======================
     // DOM Elements
     // ======================
-    const pages = {
-        welcome: document.getElementById('welcome-page'),
-        signup: document.getElementById('signup-page'),
-        login: document.getElementById('login-page'),
-        profile: document.getElementById('profile-page'),
-        levels: document.getElementById('levels-page'),
-        game: document.getElementById('game-page')
-    };
-
-    const profileElements = {
-        username: document.getElementById('profile-username'),
-        levelsCompleted: document.getElementById('levels-completed'),
-        typingSpeed: document.getElementById('typing-speed'),
-        profileImg: document.getElementById('profile-img'),
-        playLevelsBtn: document.getElementById('play-levels-btn'),
-        logoutBtn: document.getElementById('logout-btn'),
-        backToProfile: document.getElementById('back-to-profile'),
-        levelsGrid: document.querySelector('.levels-grid')
-    };
-    
-    const buttons = {
-        welcome: {
-            signup: document.getElementById('signup-btn'),
-            login: document.getElementById('login-btn'),
-            guest: document.getElementById('guest-btn')
+    const elements = {
+        pages: {
+            welcome: document.getElementById('welcome-page'),
+            signup: document.getElementById('signup-page'),
+            login: document.getElementById('login-page'),
+            profile: document.getElementById('profile-page'),
+            levels: document.getElementById('levels-page'),
+            game: document.getElementById('game-page')
         },
-        signup: {
-            submit: document.getElementById('signup-submit'),
-            back: document.getElementById('back-btn'),
-            login: document.getElementById('go-to-login')
+        profile: {
+            username: document.getElementById('profile-username'),
+            levelsCompleted: document.getElementById('levels-completed'),
+            typingSpeed: document.getElementById('typing-speed'),
+            profileImg: document.getElementById('profile-img'),
+            playLevelsBtn: document.getElementById('play-levels-btn'),
+            logoutBtn: document.getElementById('logout-btn'),
+            backToProfile: document.getElementById('back-to-profile'),
+            levelsGrid: document.querySelector('.levels-grid')
         },
-        login: {
-            submit: document.getElementById('login-submit'),
-            back: document.getElementById('back-btn-login'),
-            signup: document.getElementById('go-to-signup')
+        buttons: {
+            welcome: {
+                signup: document.getElementById('signup-btn'),
+                login: document.getElementById('login-btn'),
+                guest: document.getElementById('guest-btn')
+            },
+            signup: {
+                submit: document.getElementById('signup-submit'),
+                back: document.getElementById('back-btn'),
+                login: document.getElementById('go-to-login')
+            },
+            login: {
+                submit: document.getElementById('login-submit'),
+                back: document.getElementById('back-btn-login'),
+                signup: document.getElementById('go-to-signup')
+            }
+        },
+        forms: {
+            signup: {
+                username: document.getElementById('signup-username'),
+                password: document.getElementById('signup-password'),
+                confirmPassword: document.getElementById('signup-password-confirm'),
+                status: document.getElementById('signup-status')
+            },
+            login: {
+                username: document.getElementById('login-username'),
+                password: document.getElementById('login-password'),
+                status: document.getElementById('login-status')
+            }
+        },
+        game: {
+            currentLevel: document.getElementById('current-level'),
+            wpmStat: document.getElementById('wpm-stat'),
+            accuracyStat: document.getElementById('accuracy-stat'),
+            timeStat: document.getElementById('time-stat'),
+            textDisplay: document.getElementById('text-display'),
+            progressBar: document.getElementById('progress-bar'),
+            backToLevels: document.getElementById('back-to-levels')
         }
-    };
-
-    const forms = {
-        signup: {
-            username: document.getElementById('signup-username'),
-            password: document.getElementById('signup-password'),
-            confirmPassword: document.getElementById('signup-password-confirm'),
-            status: document.getElementById('signup-status')
-        },
-        login: {
-            username: document.getElementById('login-username'),
-            password: document.getElementById('login-password'),
-            status: document.getElementById('login-status')
-        }
-    };
-
-    const gameElements = {
-        currentLevel: document.getElementById('current-level'),
-        wpmStat: document.getElementById('wpm-stat'),
-        accuracyStat: document.getElementById('accuracy-stat'),
-        timeStat: document.getElementById('time-stat'),
-        textDisplay: document.getElementById('text-display'),
-        progressBar: document.getElementById('progress-bar'),
-        backToLevels: document.getElementById('back-to-levels')
     };
 
     // ======================
     // Game Configuration
     // ======================
-    const levelConfigs = [
-        { words: 10, maxWordLength: 4, timeLimit: 120 },  // Level 1
-        { words: 15, maxWordLength: 4, timeLimit: 120 },  // Level 2
-        { words: 20, maxWordLength: 5, timeLimit: 100 },  // Level 3
-        { words: 25, maxWordLength: 5, timeLimit: 100 },  // Level 4
-        { words: 30, maxWordLength: 6, timeLimit: 90 },   // Level 5
-        { words: 35, maxWordLength: 6, timeLimit: 90 },   // Level 6
-        { words: 40, maxWordLength: 7, timeLimit: 80 },   // Level 7
-        { words: 45, maxWordLength: 7, timeLimit: 80 },   // Level 8
-        { words: 50, maxWordLength: 8, timeLimit: 70 },   // Level 9
-        { words: 60, maxWordLength: 8, timeLimit: 70 }    // Level 10
-    ];
-
-    const wordBank = [
-        'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
-        // ... (include all words from your word bank)
-        'write', 'writes', 'wrote', 'written', 'writing'
-    ];
+    const config = {
+        levelConfigs: [
+            { words: 10, maxWordLength: 4, timeLimit: 120 },  // Level 1
+            { words: 15, maxWordLength: 4, timeLimit: 120 },  // Level 2
+            { words: 20, maxWordLength: 5, timeLimit: 100 },  // Level 3
+            { words: 25, maxWordLength: 5, timeLimit: 100 },  // Level 4
+            { words: 30, maxWordLength: 6, timeLimit: 90 },   // Level 5
+            { words: 35, maxWordLength: 6, timeLimit: 90 },   // Level 6
+            { words: 40, maxWordLength: 7, timeLimit: 80 },   // Level 7
+            { words: 45, maxWordLength: 7, timeLimit: 80 },   // Level 8
+            { words: 50, maxWordLength: 8, timeLimit: 70 },   // Level 9
+            { words: 60, maxWordLength: 8, timeLimit: 70 }    // Level 10
+        ],
+        wordBank: [
+            'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
+            'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+            'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
+            'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
+            'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
+            'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take',
+            'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other',
+            'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
+            'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
+            'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
+            'write', 'writes', 'wrote', 'written', 'writing'
+        ]
+    };
 
     // ======================
     // Game State
     // ======================
-    let gameState = {
+    const state = {
         currentLevel: 1,
         words: [],
-        currentWordIndex: 0,
-        currentCharIndex: 0,
+        fullText: '',
+        currentPosition: 0,
+        correctChars: [],
         startTime: null,
         correctKeystrokes: 0,
         totalKeystrokes: 0,
@@ -104,10 +112,15 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ======================
-    // Initialization
+    // Core Functions
     // ======================
     function init() {
-        // Initialize fake user database if it doesn't exist
+        initUserDatabase();
+        checkSession();
+        setupEventListeners();
+    }
+
+    function initUserDatabase() {
         if (!localStorage.getItem('fakeUsers')) {
             const fakeUsers = {
                 'test': {
@@ -125,8 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
         }
+    }
 
-        // Check for existing session
+    function checkSession() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser) {
             handleLoginSuccess(currentUser.username, {
@@ -137,16 +151,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             showPage('welcome');
         }
-
-        setupEventListeners();
     }
 
     // ======================
     // Navigation Functions
     // ======================
     function showPage(page) {
-        Object.values(pages).forEach(p => p.style.display = 'none');
-        pages[page].style.display = 'block';
+        Object.values(elements.pages).forEach(p => p.style.display = 'none');
+        elements.pages[page].style.display = 'block';
     }
 
     function showStatus(element, message, type) {
@@ -161,28 +173,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // ======================
     function setupEventListeners() {
         // Navigation
-        buttons.welcome.signup.addEventListener('click', () => showPage('signup'));
-        buttons.welcome.login.addEventListener('click', () => showPage('login'));
-        buttons.signup.back.addEventListener('click', () => showPage('welcome'));
-        buttons.login.back.addEventListener('click', () => showPage('welcome'));
-        buttons.signup.login.addEventListener('click', () => showPage('login'));
-        buttons.login.signup.addEventListener('click', () => showPage('signup'));
-        profileElements.playLevelsBtn.addEventListener('click', () => showPage('levels'));
-        profileElements.backToProfile.addEventListener('click', () => showPage('profile'));
-        profileElements.logoutBtn.addEventListener('click', handleLogout);
-        gameElements.backToLevels.addEventListener('click', () => {
-            gameState.active = false;
-            clearInterval(gameState.timer);
-            gameElements.textDisplay.removeEventListener('keydown', handleKeyPress);
+        elements.buttons.welcome.signup.addEventListener('click', () => showPage('signup'));
+        elements.buttons.welcome.login.addEventListener('click', () => showPage('login'));
+        elements.buttons.signup.back.addEventListener('click', () => showPage('welcome'));
+        elements.buttons.login.back.addEventListener('click', () => showPage('welcome'));
+        elements.buttons.signup.login.addEventListener('click', () => showPage('login'));
+        elements.buttons.login.signup.addEventListener('click', () => showPage('signup'));
+        elements.profile.playLevelsBtn.addEventListener('click', () => showPage('levels'));
+        elements.profile.backToProfile.addEventListener('click', () => showPage('profile'));
+        elements.profile.logoutBtn.addEventListener('click', handleLogout);
+        elements.game.backToLevels.addEventListener('click', () => {
+            state.active = false;
+            clearInterval(state.timer);
+            elements.game.textDisplay.removeEventListener('keydown', handleKeyPress);
             showPage('levels');
         });
 
         // Form Handling
-        buttons.signup.submit.addEventListener('click', handleSignup);
-        buttons.login.submit.addEventListener('click', handleLogin);
+        elements.buttons.signup.submit.addEventListener('click', handleSignup);
+        elements.buttons.login.submit.addEventListener('click', handleLogin);
 
         // Guest Mode
-        buttons.welcome.guest.addEventListener('click', () => {
+        elements.buttons.welcome.guest.addEventListener('click', () => {
             handleLoginSuccess('Guest', {
                 levelsCompleted: 0,
                 typingSpeed: 0,
@@ -195,26 +207,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // User Authentication
     // ======================
     function handleSignup() {
-        forms.signup.status.classList.add('hidden');
+        elements.forms.signup.status.classList.add('hidden');
 
-        if (forms.signup.password.value !== forms.signup.confirmPassword.value) {
-            showStatus(forms.signup.status, "Passwords don't match!", 'error');
+        if (elements.forms.signup.password.value !== elements.forms.signup.confirmPassword.value) {
+            showStatus(elements.forms.signup.status, "Passwords don't match!", 'error');
             return;
         }
 
-        if (!forms.signup.username.value || !forms.signup.password.value) {
-            showStatus(forms.signup.status, "Please fill in all fields", 'error');
+        if (!elements.forms.signup.username.value || !elements.forms.signup.password.value) {
+            showStatus(elements.forms.signup.status, "Please fill in all fields", 'error');
             return;
         }
 
         const fakeUsers = JSON.parse(localStorage.getItem('fakeUsers'));
-        if (fakeUsers[forms.signup.username.value]) {
-            showStatus(forms.signup.status, "Username already exists", 'error');
+        if (fakeUsers[elements.forms.signup.username.value]) {
+            showStatus(elements.forms.signup.status, "Username already exists", 'error');
             return;
         }
 
-        fakeUsers[forms.signup.username.value] = {
-            password: forms.signup.password.value,
+        fakeUsers[elements.forms.signup.username.value] = {
+            password: elements.forms.signup.password.value,
             levelsCompleted: 0,
             typingSpeed: 0,
             profilePicture: 'https://i.imgur.com/JqYeXZk.png'
@@ -222,29 +234,29 @@ document.addEventListener('DOMContentLoaded', function() {
         
         localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
 
-        showStatus(forms.signup.status, "Account created! Redirecting...", 'success');
+        showStatus(elements.forms.signup.status, "Account created! Redirecting...", 'success');
         setTimeout(() => showPage('login'), 2000);
     }
 
     function handleLogin() {
-        forms.login.status.classList.add('hidden');
+        elements.forms.login.status.classList.add('hidden');
 
-        if (!forms.login.username.value || !forms.login.password.value) {
-            showStatus(forms.login.status, "Please fill in all fields", 'error');
+        if (!elements.forms.login.username.value || !elements.forms.login.password.value) {
+            showStatus(elements.forms.login.status, "Please fill in all fields", 'error');
             return;
         }
 
         const fakeUsers = JSON.parse(localStorage.getItem('fakeUsers'));
-        const user = fakeUsers[forms.login.username.value];
+        const user = fakeUsers[elements.forms.login.username.value];
         
-        if (!user || user.password !== forms.login.password.value) {
-            showStatus(forms.login.status, "Invalid username or password", 'error');
+        if (!user || user.password !== elements.forms.login.password.value) {
+            showStatus(elements.forms.login.status, "Invalid username or password", 'error');
             return;
         }
 
-        showStatus(forms.login.status, "Login successful! Redirecting...", 'success');
+        showStatus(elements.forms.login.status, "Login successful! Redirecting...", 'success');
         setTimeout(() => {
-            handleLoginSuccess(forms.login.username.value, {
+            handleLoginSuccess(elements.forms.login.username.value, {
                 levelsCompleted: user.levelsCompleted,
                 typingSpeed: user.typingSpeed,
                 profilePicture: user.profilePicture
@@ -274,74 +286,73 @@ document.addEventListener('DOMContentLoaded', function() {
     // Profile & Levels
     // ======================
     function updateProfile(userData) {
-        profileElements.username.textContent = userData.username;
-        profileElements.levelsCompleted.textContent = `${userData.levelsCompleted}/10`;
-        profileElements.typingSpeed.textContent = `${userData.typingSpeed} WPM`;
-        profileElements.profileImg.src = userData.profilePicture;
+        elements.profile.username.textContent = userData.username;
+        elements.profile.levelsCompleted.textContent = `${userData.levelsCompleted}/10`;
+        elements.profile.typingSpeed.textContent = `${userData.typingSpeed} WPM`;
+        elements.profile.profileImg.src = userData.profilePicture;
     }
     
     function generateLevels(completedLevels) {
-    profileElements.levelsGrid.innerHTML = '';
-    
-    for (let i = 1; i <= 10; i++) {
-        const levelBtn = document.createElement('button');
-        levelBtn.className = `level-btn ${i <= completedLevels ? 'completed' : ''}`;
+        elements.profile.levelsGrid.innerHTML = '';
         
-        // Only show status for completed levels
-        levelBtn.innerHTML = `
-            <span class="level-number">${i}</span>
-            ${i <= completedLevels ? '<span class="level-status">COMPLETED</span>' : ''}
-        `;
-        
-        if (i <= completedLevels + 1) {
-            levelBtn.addEventListener('click', () => startLevel(i));
-        } else {
-            levelBtn.style.opacity = '0.6';
-            levelBtn.style.cursor = 'not-allowed';
+        for (let i = 1; i <= 10; i++) {
+            const levelBtn = document.createElement('button');
+            levelBtn.className = `level-btn ${i <= completedLevels ? 'completed' : ''}`;
+            
+            levelBtn.innerHTML = `
+                <span class="level-number">${i}</span>
+                ${i <= completedLevels ? '<span class="level-status">COMPLETED</span>' : ''}
+            `;
+            
+            if (i <= completedLevels + 1) {
+                levelBtn.addEventListener('click', () => startLevel(i));
+            } else {
+                levelBtn.style.opacity = '0.6';
+                levelBtn.style.cursor = 'not-allowed';
+            }
+            
+            elements.profile.levelsGrid.appendChild(levelBtn);
         }
-        
-        profileElements.levelsGrid.appendChild(levelBtn);
     }
-}
 
     // ======================
-    // Game Logic (MonkeyType Style)
+    // Game Logic
     // ======================
     function startLevel(levelNumber) {
-        gameState.active = true;
-        gameState.currentLevel = levelNumber;
-        gameState.words = generateWords(levelNumber);
-        gameState.fullText = gameState.words.join(' ');
-        gameState.currentPosition = 0;
-        gameState.correctChars = [];
-        gameState.startTime = null;
-        gameState.correctKeystrokes = 0;
-        gameState.totalKeystrokes = 0;
-        gameState.completed = false;
-        gameState.timeLeft = levelConfigs[levelNumber - 1].timeLimit;
+        state.active = true;
+        state.currentLevel = levelNumber;
+        state.words = generateWords(levelNumber);
+        state.fullText = state.words.join(' ');
+        state.currentPosition = 0;
+        state.correctChars = [];
+        state.startTime = null;
+        state.correctKeystrokes = 0;
+        state.totalKeystrokes = 0;
+        state.completed = false;
+        state.timeLeft = config.levelConfigs[levelNumber - 1].timeLimit;
     
-        gameElements.currentLevel.textContent = levelNumber;
-        gameElements.wpmStat.textContent = '0';
-        gameElements.accuracyStat.textContent = '100%';
-        gameElements.timeStat.textContent = `${gameState.timeLeft}s`;
+        elements.game.currentLevel.textContent = levelNumber;
+        elements.game.wpmStat.textContent = '0';
+        elements.game.accuracyStat.textContent = '100%';
+        elements.game.timeStat.textContent = `${state.timeLeft}s`;
         
         updateTextDisplay();
         showPage('game');
         
-        if (gameState.timer) clearInterval(gameState.timer);
-        gameState.timer = setInterval(updateTimer, 1000);
+        if (state.timer) clearInterval(state.timer);
+        state.timer = setInterval(updateTimer, 1000);
         
-        gameElements.textDisplay.tabIndex = 0;
-        gameElements.textDisplay.focus();
-        gameElements.textDisplay.addEventListener('keydown', handleKeyPress);
+        elements.game.textDisplay.tabIndex = 0;
+        elements.game.textDisplay.focus();
+        elements.game.textDisplay.addEventListener('keydown', handleKeyPress);
     }
 
     function generateWords(level) {
-        const config = levelConfigs[level - 1];
-        const filteredWords = wordBank.filter(word => word.length <= config.maxWordLength);
+        const levelConfig = config.levelConfigs[level - 1];
+        const filteredWords = config.wordBank.filter(word => word.length <= levelConfig.maxWordLength);
         const words = [];
         
-        for (let i = 0; i < config.words; i++) {
+        for (let i = 0; i < levelConfig.words; i++) {
             const randomIndex = Math.floor(Math.random() * filteredWords.length);
             words.push(filteredWords[randomIndex]);
         }
@@ -351,49 +362,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTextDisplay() {
         let displayHTML = '';
-        const text = gameState.fullText;
+        const text = state.fullText;
         
-        // Split text into lines that fit the container
-        const words = text.split(' ');
-        let currentLine = '';
-        
-        words.forEach((word, wordIndex) => {
-            // Add space between words except the first one
-            if (wordIndex > 0) {
-                currentLine += ' ';
+        for (let i = 0; i < text.length; i++) {
+            let charClass = '';
+            
+            if (i < state.currentPosition) {
+                charClass = state.correctChars[i] ? 'correct-char' : 'incorrect-char';
+            } else if (i === state.currentPosition) {
+                charClass = 'current-char';
             }
             
-            // Process each character in the word
-            let wordHTML = '';
-            const wordStartPos = currentLine.length;
-            
-            for (let i = 0; i < word.length; i++) {
-                const charPos = wordStartPos + i;
-                let charClass = '';
-                
-                if (charPos < gameState.currentPosition) {
-                    charClass = gameState.correctChars[charPos] ? 'correct-char' : 'incorrect-char';
-                } else if (charPos === gameState.currentPosition) {
-                    charClass = 'current-char';
-                }
-                
-                wordHTML += `<span class="${charClass}">${word[i]}</span>`;
+            if (text[i] === ' ') {
+                displayHTML += `<span class="${charClass} space-char"> </span>`;
+            } else {
+                displayHTML += `<span class="${charClass}">${text[i]}</span>`;
             }
-            
-            currentLine += wordHTML;
-        });
+        }
         
-        // Wrap the entire text in a single pre element for consistent spacing
-        displayHTML = `<div class="text-line">${currentLine}</div>`;
+        elements.game.textDisplay.innerHTML = displayHTML;
         
-        gameElements.textDisplay.innerHTML = displayHTML;
+        const progressPercent = (state.currentPosition / text.length) * 100;
+        elements.game.progressBar.style.setProperty('--progress', `${progressPercent}%`);
         
-        // Update progress bar
-        const progressPercent = (gameState.currentPosition / text.length) * 100;
-        gameElements.progressBar.style.setProperty('--progress', `${progressPercent}%`);
-        
-        // Scroll to keep current character visible
-        const currentCharElement = gameElements.textDisplay.querySelector('.current-char');
+        const currentCharElement = elements.game.textDisplay.querySelector('.current-char');
         if (currentCharElement) {
             currentCharElement.scrollIntoView({
                 behavior: 'smooth',
@@ -402,54 +394,41 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-    
-    function getCharWidth(char) {
-        // Approximate character widths (adjust as needed)
-        if (char === ' ') return 8;
-        if (char === 'i' || char === 'l') return 6;
-        if (char === 'm' || char === 'w') return 12;
-        return 10; // Default width for most characters
-    }
 
     function handleKeyPress(e) {
-        if (!gameState.startTime) {
-            gameState.startTime = new Date();
-            gameState.correctChars = []; // Track correctness of each character
+        if (!state.active) return;
+        
+        if (!state.startTime) {
+            state.startTime = new Date();
+            state.correctChars = new Array(state.fullText.length).fill(false);
         }
         
-        // Ignore modifier keys
         if (e.ctrlKey || e.altKey || e.metaKey) return;
         
-        // Prevent default to avoid any unwanted behavior
         e.preventDefault();
         
-        // Handle backspace
         if (e.key === 'Backspace') {
-            if (gameState.currentPosition > 0) {
-                gameState.currentPosition--;
-                gameState.totalKeystrokes++;
-                gameState.correctChars.pop(); // Remove the last correctness record
+            if (state.currentPosition > 0) {
+                state.currentPosition--;
+                state.totalKeystrokes++;
             }
             updateTextDisplay();
             return;
         }
         
-        // Ignore other non-character keys except space
         if (e.key.length !== 1 && e.key !== ' ') return;
         
-        const currentChar = gameState.fullText[gameState.currentPosition];
+        const currentChar = state.fullText[state.currentPosition];
         const isCorrect = e.key === currentChar;
         
-        // Record whether this keystroke was correct
-        gameState.correctChars[gameState.currentPosition] = isCorrect;
+        state.correctChars[state.currentPosition] = isCorrect;
+        state.totalKeystrokes++;
         
-        gameState.totalKeystrokes++;
         if (isCorrect) {
-            gameState.correctKeystrokes++;
-            gameState.currentPosition++;
+            state.correctKeystrokes++;
+            state.currentPosition++;
             
-            // Check if level is completed
-            if (gameState.currentPosition >= gameState.fullText.length) {
+            if (state.currentPosition >= state.fullText.length) {
                 endGame(true);
                 return;
             }
@@ -460,49 +439,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateStats() {
-        if (!gameState.startTime) return;
+        if (!state.startTime) return;
         
-        const timeElapsed = (new Date() - gameState.startTime) / 60000;
-        const wpm = Math.round((gameState.correctKeystrokes / 5) / timeElapsed) || 0;
-        const accuracy = gameState.totalKeystrokes > 0 
-            ? Math.round((gameState.correctKeystrokes / gameState.totalKeystrokes) * 100)
+        const timeElapsed = (new Date() - state.startTime) / 60000;
+        const wpm = Math.round((state.correctKeystrokes / 5) / timeElapsed) || 0;
+        const accuracy = state.totalKeystrokes > 0 
+            ? Math.round((state.correctKeystrokes / state.totalKeystrokes) * 100)
             : 100;
         
-        gameElements.wpmStat.textContent = wpm;
-        gameElements.accuracyStat.textContent = `${accuracy}%`;
+        elements.game.wpmStat.textContent = wpm;
+        elements.game.accuracyStat.textContent = `${accuracy}%`;
     }
 
     function updateTimer() {
-        gameState.timeLeft--;
-        gameElements.timeStat.textContent = `${gameState.timeLeft}s`;
+        state.timeLeft--;
+        elements.game.timeStat.textContent = `${state.timeLeft}s`;
         
-        if (gameState.timeLeft <= 0) {
+        if (state.timeLeft <= 0) {
             endGame(false);
         }
     }
 
     function endGame(success) {
-        if (!gameState.active) return;
+        if (!state.active) return;
         
-        gameState.active = false;
-        clearInterval(gameState.timer);
-        gameState.completed = success;
+        state.active = false;
+        clearInterval(state.timer);
+        state.completed = success;
         
-        gameElements.textDisplay.removeEventListener('keydown', handleKeyPress);
+        elements.game.textDisplay.removeEventListener('keydown', handleKeyPress);
         
         if (success) {
-            const timeElapsed = (new Date() - gameState.startTime) / 60000;
-            const finalWpm = Math.round((gameState.correctKeystrokes / 5) / timeElapsed) || 0;
-            const accuracy = gameState.totalKeystrokes > 0 
-                ? Math.round((gameState.correctKeystrokes / gameState.totalKeystrokes) * 100)
+            const timeElapsed = (new Date() - state.startTime) / 60000;
+            const finalWpm = Math.round((state.correctKeystrokes / 5) / timeElapsed) || 0;
+            const accuracy = state.totalKeystrokes > 0 
+                ? Math.round((state.correctKeystrokes / state.totalKeystrokes) * 100)
                 : 100;
             
-            // Update user progress
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             const fakeUsers = JSON.parse(localStorage.getItem('fakeUsers'));
             
-            if (gameState.currentLevel === currentUser.levelsCompleted + 1) {
-                currentUser.levelsCompleted = gameState.currentLevel;
+            if (state.currentLevel === currentUser.levelsCompleted + 1) {
+                currentUser.levelsCompleted = state.currentLevel;
                 currentUser.typingSpeed = finalWpm;
                 
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -510,25 +488,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentUser.username !== 'Guest') {
                     fakeUsers[currentUser.username] = {
                         ...fakeUsers[currentUser.username],
-                        levelsCompleted: gameState.currentLevel,
+                        levelsCompleted: state.currentLevel,
                         typingSpeed: finalWpm
                     };
                     localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
                 }
     
-                // Update profile display immediately
                 updateProfile(currentUser);
-                // Regenerate levels with new completion status
                 generateLevels(currentUser.levelsCompleted);
             }
             
-            // Show stats popup
             showStatsPopup({
-                level: gameState.currentLevel,
+                level: state.currentLevel,
                 wpm: finalWpm,
                 accuracy: accuracy,
                 time: Math.round(timeElapsed * 60),
-                nextLevelUnlocked: gameState.currentLevel === currentUser.levelsCompleted
+                nextLevelUnlocked: state.currentLevel === currentUser.levelsCompleted
             });
         } else {
             showPage('levels');
@@ -562,13 +537,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(popup);
         
-        // Handle continue button
         popup.querySelector('#continue-btn').addEventListener('click', () => {
             popup.remove();
             showPage('levels');
         });
         
-        // Close popup when clicking outside
         popup.addEventListener('click', (e) => {
             if (e.target === popup) {
                 popup.remove();
@@ -577,6 +550,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Start the application
     init();
 });
