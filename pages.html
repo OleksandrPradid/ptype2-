@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Welcome Page -->
+    <!-- ===== WELCOME PAGE ===== -->
     <div id="welcome-page" class="page-container">
         <div class="card">
             <div class="logo-header">
@@ -24,19 +24,14 @@
             </p>
             
             <div class="button-group">
-                <button id="signup-btn" class="btn">
-                    SIGN UP
-                </button>
-                <button id="login-btn" class="btn btn-secondary">
-                    SIGN IN
-                </button>
-                <button id="guest-btn" class="btn btn-secondary">
-                    PLAY AS GUEST
-                </button>
+                <button id="signup-btn" class="btn">SIGN UP</button>
+                <button id="login-btn" class="btn btn-secondary">SIGN IN</button>
+                <button id="guest-btn" class="btn btn-secondary">PLAY AS GUEST</button>
             </div>
         </div>
     </div>
 
+    <!-- ===== AUTHENTICATION PAGES ===== -->
     <!-- Signup Page -->
     <div id="signup-page" class="page-container" style="display:none;">
         <div class="card">
@@ -133,6 +128,7 @@
         </button>
     </div>
 
+    <!-- ===== PROFILE PAGE ===== -->
     <div id="profile-page" class="page-container" style="display:none;">
         <div class="card">
             <div class="logo-header">
@@ -177,7 +173,7 @@
         </div>
     </div>
     
-    <!-- Levels Page -->
+    <!-- ===== LEVELS PAGE ===== -->
     <div id="levels-page" class="page-container" style="display:none;">
         <div class="card">
             <div class="logo-header">
@@ -198,44 +194,44 @@
         </div>
     </div>
 
-    <!-- Game Page -->
-<div id="game-page" class="page-container" style="display:none;">
-    <div class="card">
-        <div class="logo-header">
-            <span class="logo-p">p</span>
-            <span class="logo-type">type</span>
-            <span class="logo-2">2</span>
-        </div>
-        
-        <h2 class="title">LEVEL <span id="current-level">1</span></h2>
-        
-        <div class="game-stats">
-            <div class="stat">
-                <span class="stat-label">WPM:</span>
-                <span id="wpm-stat" class="stat-value">0</span>
+    <!-- ===== GAME PAGE ===== -->
+    <div id="game-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
             </div>
-            <div class="stat">
-                <span class="stat-label">Accuracy:</span>
-                <span id="accuracy-stat" class="stat-value">100%</span>
+            
+            <h2 class="title">LEVEL <span id="current-level">1</span></h2>
+            
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-label">WPM:</span>
+                    <span id="wpm-stat" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Accuracy:</span>
+                    <span id="accuracy-stat" class="stat-value">100%</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Time:</span>
+                    <span id="time-stat" class="stat-value">0s</span>
+                </div>
             </div>
-            <div class="stat">
-                <span class="stat-label">Time:</span>
-                <span id="time-stat" class="stat-value">0s</span>
+            
+            <div id="game-container">
+                <div id="text-display"></div>
+                <div id="progress-bar"></div>
             </div>
+            
+            <button id="back-to-levels" class="btn btn-secondary" style="margin-top: 20px;">
+                ← Back to Levels
+            </button>
         </div>
-        
-        <div id="game-container">
-            <div id="text-display"></div>
-            <input type="text" id="text-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-            <div id="progress-bar"></div>
-        </div>
-        
-        <button id="back-to-levels" class="btn btn-secondary" style="margin-top: 20px;">
-            ← Back to Levels
-        </button>
     </div>
-</div>
 
+    <!-- ===== SCRIPTS ===== -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="javascript.js"></script>
 </body>

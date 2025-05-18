@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
         accuracyStat: document.getElementById('accuracy-stat'),
         timeStat: document.getElementById('time-stat'),
         textDisplay: document.getElementById('text-display'),
-        textInput: document.getElementById('text-input'),
         progressBar: document.getElementById('progress-bar'),
         backToLevels: document.getElementById('back-to-levels')
     };
@@ -282,26 +281,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function generateLevels(completedLevels) {
-        profileElements.levelsGrid.innerHTML = '';
+    profileElements.levelsGrid.innerHTML = '';
+    
+    for (let i = 1; i <= 10; i++) {
+        const levelBtn = document.createElement('button');
+        levelBtn.className = `level-btn ${i <= completedLevels ? 'completed' : ''}`;
         
-        for (let i = 1; i <= 10; i++) {
-            const levelBtn = document.createElement('button');
-            levelBtn.className = `level-btn ${i <= completedLevels ? 'completed' : ''}`;
-            levelBtn.innerHTML = `
-                <span class="level-number">${i}</span>
-                <span class="level-status">${i <= completedLevels ? 'COMPLETED' : 'LOCKED'}</span>
-            `;
-            
-            if (i <= completedLevels + 1) {
-                levelBtn.addEventListener('click', () => startLevel(i));
-            } else {
-                levelBtn.style.opacity = '0.6';
-                levelBtn.style.cursor = 'not-allowed';
-            }
-            
-            profileElements.levelsGrid.appendChild(levelBtn);
+        // Only show status for completed levels
+        levelBtn.innerHTML = `
+            <span class="level-number">${i}</span>
+            ${i <= completedLevels ? '<span class="level-status">COMPLETED</span>' : ''}
+        `;
+        
+        if (i <= completedLevels + 1) {
+            levelBtn.addEventListener('click', () => startLevel(i));
+        } else {
+            levelBtn.style.opacity = '0.6';
+            levelBtn.style.cursor = 'not-allowed';
         }
+        
+        profileElements.levelsGrid.appendChild(levelBtn);
     }
+}
 
     // ======================
     // Game Logic (MonkeyType Style)
@@ -310,8 +311,9 @@ document.addEventListener('DOMContentLoaded', function() {
         gameState.active = true;
         gameState.currentLevel = levelNumber;
         gameState.words = generateWords(levelNumber);
-        gameState.fullText = gameState.words.join(' '); // Include spaces between words
+        gameState.fullText = gameState.words.join(' ');
         gameState.currentPosition = 0;
+        gameState.correctChars = [];
         gameState.startTime = null;
         gameState.correctKeystrokes = 0;
         gameState.totalKeystrokes = 0;
@@ -350,43 +352,55 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateTextDisplay() {
         let displayHTML = '';
         const text = gameState.fullText;
-        const maxWidth = gameElements.textDisplay.clientWidth;
+        
+        // Split text into lines that fit the container
+        const words = text.split(' ');
         let currentLine = '';
-        let currentLineLength = 0;
-        let charIndex = 0;
         
-        // Create lines that fit within the container width
-        while (charIndex < text.length) {
-            const char = text[charIndex];
-            const charWidth = getCharWidth(char);
-            
-            if (currentLineLength + charWidth > maxWidth && currentLine.length > 0) {
-                // Add completed line to display
-                displayHTML += `<div class="text-line">${currentLine}</div>`;
-                currentLine = '';
-                currentLineLength = 0;
+        words.forEach((word, wordIndex) => {
+            // Add space between words except the first one
+            if (wordIndex > 0) {
+                currentLine += ' ';
             }
             
-            // Add character to current line with appropriate styling
-            let charClass = '';
-            if (charIndex < gameState.currentPosition) {
-                charClass = gameState.correctChars[charIndex] ? 'correct-char' : 'incorrect-char';
-            } else if (charIndex === gameState.currentPosition) {
-                charClass = 'current-char';
+            // Process each character in the word
+            let wordHTML = '';
+            const wordStartPos = currentLine.length;
+            
+            for (let i = 0; i < word.length; i++) {
+                const charPos = wordStartPos + i;
+                let charClass = '';
+                
+                if (charPos < gameState.currentPosition) {
+                    charClass = gameState.correctChars[charPos] ? 'correct-char' : 'incorrect-char';
+                } else if (charPos === gameState.currentPosition) {
+                    charClass = 'current-char';
+                }
+                
+                wordHTML += `<span class="${charClass}">${word[i]}</span>`;
             }
             
-            currentLine += `<span class="${charClass}">${char === ' ' ? '&nbsp;' : char}</span>`;
-            currentLineLength += charWidth;
-            charIndex++;
-        }
+            currentLine += wordHTML;
+        });
         
-        // Add the last line if it exists
-        if (currentLine.length > 0) {
-            displayHTML += `<div class="text-line">${currentLine}</div>`;
-        }
+        // Wrap the entire text in a single pre element for consistent spacing
+        displayHTML = `<div class="text-line">${currentLine}</div>`;
         
         gameElements.textDisplay.innerHTML = displayHTML;
-        gameElements.progressBar.style.setProperty('--progress', `${(gameState.currentPosition / text.length) * 100}%`);
+        
+        // Update progress bar
+        const progressPercent = (gameState.currentPosition / text.length) * 100;
+        gameElements.progressBar.style.setProperty('--progress', `${progressPercent}%`);
+        
+        // Scroll to keep current character visible
+        const currentCharElement = gameElements.textDisplay.querySelector('.current-char');
+        if (currentCharElement) {
+            currentCharElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            });
+        }
     }
     
     function getCharWidth(char) {
@@ -405,6 +419,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Ignore modifier keys
         if (e.ctrlKey || e.altKey || e.metaKey) return;
+        
+        // Prevent default to avoid any unwanted behavior
+        e.preventDefault();
         
         // Handle backspace
         if (e.key === 'Backspace') {
@@ -498,6 +515,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
                 }
+    
+                // Update profile display immediately
+                updateProfile(currentUser);
+                // Regenerate levels with new completion status
+                generateLevels(currentUser.levelsCompleted);
             }
             
             // Show stats popup
