@@ -72,7 +72,7 @@
                 Already have an account? <a href="#" id="go-to-login">Sign In</a>
             </div>
             
-            <div id="signup-status" class="status-message hidden">
+            <div id="signup-status" class="status-message hidden" style="display: none;">
                 <div class="status-icon">⚠️</div>
                 <div class="status-text"></div>
             </div>
@@ -117,7 +117,7 @@
                 Don't have an account? <a href="#" id="go-to-signup">Sign Up</a>
             </div>
             
-            <div id="login-status" class="status-message hidden">
+            <div id="login-status" class="status-message hidden" style="display: none;">
                 <div class="status-icon">⚠️</div>
                 <div class="status-text"></div>
             </div>
@@ -141,8 +141,10 @@
             
             <div class="profile-content">
                 <div class="profile-picture">
-                    <img src="https://i.imgur.com/JqYeXZk.png" alt="Profile" id="profile-img">
-                    <button id="change-picture" class="btn-icon">🖼️</button>
+                    <!-- Default to emoji if no image -->
+                    <span id="profile-emoji">👤</span>
+                    <!-- Image will hide if not available -->
+                    <img src="" alt="Profile" id="profile-img" style="display: none;">
                 </div>
                 
                 <div class="profile-info">
