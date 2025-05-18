@@ -299,9 +299,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const levelBtn = document.createElement('button');
             levelBtn.className = `level-btn ${i <= completedLevels ? 'completed' : ''}`;
             
+            let statusText = '';
+            if (i <= completedLevels) {
+                statusText = '<span class="level-status" data-status="completed">COMPLETED</span>';
+            } else if (i === completedLevels + 1) {
+                statusText = '<span class="level-status" data-status="start">START</span>';
+            } else {
+                statusText = '<span class="level-status" data-status="locked">LOCKED</span>';
+            }
+            
             levelBtn.innerHTML = `
                 <span class="level-number">${i}</span>
-                ${i <= completedLevels ? '<span class="level-status">COMPLETED</span>' : ''}
+                ${statusText}
             `;
             
             if (i <= completedLevels + 1) {
