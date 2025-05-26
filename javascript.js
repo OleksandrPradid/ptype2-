@@ -90,7 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
             'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
             'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
             'write', 'writes', 'wrote', 'written', 'writing'
-        ]
+        ],
+        guestProfile: {
+            username: 'Guest',
+            levelsCompleted: 0,
+            typingSpeed: 0,
+            profilePicture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'
+        }
     };
 
     // ======================
@@ -108,47 +114,41 @@ document.addEventListener('DOMContentLoaded', function() {
         timer: null,
         timeLeft: 0,
         completed: false,
-        active: false
+        active: false,
+        isGuest: false,
+        authToken: null
     };
 
     // ======================
     // Core Functions
     // ======================
     function init() {
-        initUserDatabase();
         checkSession();
         setupEventListeners();
     }
 
-    function initUserDatabase() {
-        if (!localStorage.getItem('fakeUsers')) {
-            const fakeUsers = {
-                'test': {
-                    password: 'test123',
-                    levelsCompleted: 3,
-                    typingSpeed: 45,
-                    profilePicture: 'https://i.imgur.com/JqYeXZk.png'
-                },
-                'user': {
-                    password: 'user123',
-                    levelsCompleted: 1,
-                    typingSpeed: 32,
-                    profilePicture: 'https://i.imgur.com/JqYeXZk.png'
+    async function checkSession() {
+        try {
+            const response = await fetch('/api/auth/me', {
+                credentials: 'include',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 }
-            };
-            localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
-        }
-    }
-
-    function checkSession() {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser) {
-            handleLoginSuccess(currentUser.username, {
-                levelsCompleted: currentUser.levelsCompleted,
-                typingSpeed: currentUser.typingSpeed,
-                profilePicture: currentUser.profilePicture
             });
-        } else {
+            
+            if (response.ok) {
+                const data = await response.json();
+                state.authToken = localStorage.getItem('authToken');
+                handleLoginSuccess(data.data.username, {
+                    levelsCompleted: data.data.levelsCompleted,
+                    typingSpeed: data.data.typingSpeed,
+                    profilePicture: data.data.profilePicture
+                });
+            } else {
+                showPage('welcome');
+            }
+        } catch (error) {
+            console.error('Error checking session:', error);
             showPage('welcome');
         }
     }
@@ -195,10 +195,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Guest Mode
         elements.buttons.welcome.guest.addEventListener('click', () => {
-            handleLoginSuccess('Guest', {
-                levelsCompleted: 0,
-                typingSpeed: 0,
-                profilePicture: 'https://i.imgur.com/JqYeXZk.png'
+            state.isGuest = true;
+            handleLoginSuccess(config.guestProfile.username, {
+                levelsCompleted: config.guestProfile.levelsCompleted,
+                typingSpeed: config.guestProfile.typingSpeed,
+                profilePicture: config.guestProfile.profilePicture
             });
         });
     }
@@ -206,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ======================
     // User Authentication
     // ======================
-    function handleSignup() {
+    async function handleSignup() {
         elements.forms.signup.status.classList.add('hidden');
 
         if (elements.forms.signup.password.value !== elements.forms.signup.confirmPassword.value) {
@@ -219,26 +220,34 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const fakeUsers = JSON.parse(localStorage.getItem('fakeUsers'));
-        if (fakeUsers[elements.forms.signup.username.value]) {
-            showStatus(elements.forms.signup.status, "Username already exists", 'error');
-            return;
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: elements.forms.signup.username.value,
+                    password: elements.forms.signup.password.value
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showStatus(elements.forms.signup.status, data.message || "Registration failed", 'error');
+                return;
+            }
+
+            showStatus(elements.forms.signup.status, "Account created! Redirecting to login...", 'success');
+            setTimeout(() => showPage('login'), 2000);
+        } catch (error) {
+            console.error('Error during signup:', error);
+            showStatus(elements.forms.signup.status, "An error occurred during registration", 'error');
         }
-
-        fakeUsers[elements.forms.signup.username.value] = {
-            password: elements.forms.signup.password.value,
-            levelsCompleted: 0,
-            typingSpeed: 0,
-            profilePicture: 'https://i.imgur.com/JqYeXZk.png'
-        };
-        
-        localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
-
-        showStatus(elements.forms.signup.status, "Account created! Redirecting...", 'success');
-        setTimeout(() => showPage('login'), 2000);
     }
 
-    function handleLogin() {
+    async function handleLogin() {
         elements.forms.login.status.classList.add('hidden');
 
         if (!elements.forms.login.username.value || !elements.forms.login.password.value) {
@@ -246,29 +255,45 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const fakeUsers = JSON.parse(localStorage.getItem('fakeUsers'));
-        const user = fakeUsers[elements.forms.login.username.value];
-        
-        if (!user || user.password !== elements.forms.login.password.value) {
-            showStatus(elements.forms.login.status, "Invalid username or password", 'error');
-            return;
-        }
-
-        showStatus(elements.forms.login.status, "Login successful! Redirecting...", 'success');
-        setTimeout(() => {
-            handleLoginSuccess(elements.forms.login.username.value, {
-                levelsCompleted: user.levelsCompleted,
-                typingSpeed: user.typingSpeed,
-                profilePicture: user.profilePicture
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: elements.forms.login.username.value,
+                    password: elements.forms.login.password.value
+                })
             });
-        }, 1500);
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showStatus(elements.forms.login.status, data.message || "Invalid username or password", 'error');
+                return;
+            }
+
+            // Store the token in localStorage and state
+            localStorage.setItem('authToken', data.token);
+            state.authToken = data.token;
+            state.isGuest = false;
+
+            showStatus(elements.forms.login.status, "Login successful! Redirecting...", 'success');
+            setTimeout(() => {
+                handleLoginSuccess(data.user.username, {
+                    levelsCompleted: data.user.levelsCompleted,
+                    typingSpeed: data.user.typingSpeed,
+                    profilePicture: data.user.profilePicture
+                });
+            }, 1500);
+        } catch (error) {
+            console.error('Error during login:', error);
+            showStatus(elements.forms.login.status, "An error occurred during login", 'error');
+        }
     }
 
     function handleLoginSuccess(username, userData) {
-        localStorage.setItem('currentUser', JSON.stringify({
-            username: username,
-            ...userData
-        }));
         updateProfile({
             username: username,
             ...userData
@@ -277,9 +302,32 @@ document.addEventListener('DOMContentLoaded', function() {
         generateLevels(userData.levelsCompleted);
     }
 
-    function handleLogout() {
-        localStorage.removeItem('currentUser');
-        showPage('welcome');
+    async function handleLogout() {
+        if (state.isGuest) {
+            // Reset guest data
+            config.guestProfile.levelsCompleted = 0;
+            config.guestProfile.typingSpeed = 0;
+            state.isGuest = false;
+            showPage('welcome');
+            return;
+        }
+
+        try {
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${state.authToken}`
+                }
+            });
+            
+            // Clear the token
+            localStorage.removeItem('authToken');
+            state.authToken = null;
+            
+            showPage('welcome');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
     }
 
     // ======================
@@ -469,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function endGame(success) {
+    async function endGame(success) {
         if (!state.active) return;
         
         state.active = false;
@@ -485,35 +533,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? Math.round((state.correctKeystrokes / state.totalKeystrokes) * 100)
                 : 100;
             
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const fakeUsers = JSON.parse(localStorage.getItem('fakeUsers'));
+            let nextLevelUnlocked = false;
             
-            if (state.currentLevel === currentUser.levelsCompleted + 1) {
-                currentUser.levelsCompleted = state.currentLevel;
-                currentUser.typingSpeed = finalWpm;
-                
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                if (currentUser.username !== 'Guest') {
-                    fakeUsers[currentUser.username] = {
-                        ...fakeUsers[currentUser.username],
-                        levelsCompleted: state.currentLevel,
-                        typingSpeed: finalWpm
-                    };
-                    localStorage.setItem('fakeUsers', JSON.stringify(fakeUsers));
+            try {
+                if (state.isGuest) {
+                    const currentLevel = state.currentLevel;
+                    const levelsCompleted = parseInt(elements.profile.levelsCompleted.textContent.split('/')[0]);
+                    
+                    if (currentLevel === levelsCompleted + 1) {
+                        config.guestProfile.levelsCompleted = currentLevel;
+                        config.guestProfile.typingSpeed = finalWpm;
+                        
+                        elements.profile.levelsCompleted.textContent = `${currentLevel}/10`;
+                        elements.profile.typingSpeed.textContent = `${finalWpm} WPM`;
+                        generateLevels(currentLevel);
+                        nextLevelUnlocked = true;
+                    }
+                } else {
+                    const response = await fetch('/api/game/save', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${state.authToken}`
+                        },
+                        body: JSON.stringify({
+                            level: state.currentLevel,
+                            wpm: finalWpm,
+                            accuracy: accuracy,
+                            time: Math.round(timeElapsed * 60)
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        updateProfile(data.data);
+                        generateLevels(data.data.levelsCompleted);
+                        nextLevelUnlocked = state.currentLevel === data.data.levelsCompleted;
+                    }
                 }
-    
-                updateProfile(currentUser);
-                generateLevels(currentUser.levelsCompleted);
+                
+                showStatsPopup({
+                    level: state.currentLevel,
+                    wpm: finalWpm,
+                    accuracy: accuracy,
+                    time: Math.round(timeElapsed * 60),
+                    nextLevelUnlocked: nextLevelUnlocked
+                });
+            } catch (error) {
+                console.error('Error saving game stats:', error);
+                showStatsPopup({
+                    level: state.currentLevel,
+                    wpm: finalWpm,
+                    accuracy: accuracy,
+                    time: Math.round(timeElapsed * 60),
+                    nextLevelUnlocked: false
+                });
             }
-            
-            showStatsPopup({
-                level: state.currentLevel,
-                wpm: finalWpm,
-                accuracy: accuracy,
-                time: Math.round(timeElapsed * 60),
-                nextLevelUnlocked: state.currentLevel === currentUser.levelsCompleted
-            });
         } else {
             showPage('levels');
         }
