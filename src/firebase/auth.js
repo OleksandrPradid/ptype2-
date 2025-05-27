@@ -42,8 +42,15 @@ export async function login(email, password) {
 }
 
 // Logout
+// In /src/firebase/auth.js
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+import { app } from './config.js';
+
+const auth = getAuth(app);
+
 export async function logout() {
-  await signOut(auth);
+    await signOut(auth);
+    console.log("User signed out");
 }
 
 // Listen for auth state changes

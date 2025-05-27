@@ -79,3 +79,26 @@ function handleLoginSuccess(username, userData) {
   showPage('profile');
   generateLevels(userData.levelsCompleted);
 }
+
+// In auth-ui.js
+document.addEventListener('DOMContentLoaded', async () => {
+  // ... your other event listeners ...
+  
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+      console.log("Found logout button");
+      logoutBtn.addEventListener('click', async () => {
+          console.log("Logout clicked");
+          try {
+              const { logout } = await import('/src/firebase/auth.js');
+              await logout();
+              showPage('welcome-page');
+              console.log("Logout successful");
+          } catch (error) {
+              console.error("Logout error:", error);
+          }
+      });
+  } else {
+      console.error("Logout button not found!");
+  }
+});
