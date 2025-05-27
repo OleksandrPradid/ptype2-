@@ -1,89 +1,246 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/11.8.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/11.8.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/11.8.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ptype2 - Typing Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ===== WELCOME PAGE ===== -->
+    <div id="welcome-page" class="page-container">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">WELCOME TO THE GAME</h2>
+            
+            <p class="welcome-message">
+                Test your typing speed and accuracy through challenging levels!<br>
+                Sign up to save your progress or play as a guest.
+            </p>
+            
+            <div class="button-group">
+                <button id="signup-btn" class="btn">SIGN UP</button>
+                <button id="login-btn" class="btn btn-secondary">SIGN IN</button>
+                <button id="guest-btn" class="btn btn-secondary">PLAY AS GUEST</button>
+            </div>
+        </div>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <!-- ===== AUTHENTICATION PAGES ===== -->
+    <!-- Signup Page -->
+    <div id="signup-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">CREATE ACCOUNT</h2>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <input id="signup-username" type="text" required placeholder=" ">
+                    <label for="signup-username">Username</label>
+                    <div class="input-icon">👤</div>
+                </div>
+                
+                <div class="input-group">
+                    <input id="signup-password" type="password" required placeholder=" ">
+                    <label for="signup-password">Password</label>
+                    <div class="input-icon">🔒</div>
+                </div>
+                
+                <div class="input-group">
+                    <input id="signup-password-confirm" type="password" required placeholder=" ">
+                    <label for="signup-password-confirm">Confirm Password</label>
+                    <div class="input-icon">✅</div>
+                </div>
+                
+                <button id="signup-submit" class="btn">
+                    <span class="btn-text">JOIN THE GAME</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            
+            <div class="footer-link">
+                Already have an account? <a href="#" id="go-to-login">Sign In</a>
+            </div>
+            
+            <div id="signup-status" class="status-message hidden">
+                <div class="status-icon">⚠️</div>
+                <div class="status-text"></div>
+            </div>
+        </div>
+        
+        <div class="back-button-container">
+            <button id="back-btn" class="btn btn-secondary back-btn">
+                ← Back to Welcome
+            </button>
+        </div>
+    </div>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+    <!-- Login Page -->
+    <div id="login-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">WELCOME BACK</h2>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <input id="login-username" type="text" required placeholder=" ">
+                    <label for="login-username">Username</label>
+                    <div class="input-icon">👤</div>
+                </div>
+                
+                <div class="input-group">
+                    <input id="login-password" type="password" required placeholder=" ">
+                    <label for="login-password">Password</label>
+                    <div class="input-icon">🔒</div>
+                </div>
+                
+                <button id="login-submit" class="btn">
+                    <span class="btn-text">SIGN IN</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            
+            <div class="footer-link">
+                Don't have an account? <a href="#" id="go-to-signup">Sign Up</a>
+            </div>
+            
+            <div id="login-status" class="status-message hidden">
+                <div class="status-icon">⚠️</div>
+                <div class="status-text"></div>
+            </div>
+        </div>
+        
+        <button id="back-btn-login" class="btn btn-secondary back-btn">
+            ← Back to Welcome
+        </button>
+    </div>
+
+    <!-- ===== PROFILE PAGE ===== -->
+    <div id="profile-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">MY PROFILE</h2>
+            
+            <div class="profile-content">
+                <div class="profile-picture">
+                    <span id="profile-emoji">👤</span>
+                    <img src="" alt="Profile" id="profile-img" style="display: none;">
+                </div>
+                
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span id="profile-username" class="info-value">Guest</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Levels Completed:</span>
+                        <span id="levels-completed" class="info-value">0/10</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Typing Speed:</span>
+                        <span id="typing-speed" class="info-value">0 WPM</span>
+                    </div>
+                </div>
+                
+                <button id="play-levels-btn" class="btn" style="margin-top: 30px;">
+                    PLAY LEVELS →
+                </button>
+            </div>
+            
+            <button id="logout-btn" class="btn btn-secondary" style="margin-top: 20px;">
+                ← Sign Out
+            </button>
+        </div>
+    </div>
+    
+    <!-- ===== LEVELS PAGE ===== -->
+    <div id="levels-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">SELECT LEVEL</h2>
+            
+            <div class="levels-grid">
+                <!-- Levels 1-10 will be generated by JavaScript -->
+            </div>
+            
+            <button id="back-to-profile" class="btn btn-secondary" style="margin-top: 20px;">
+                ← Back to Profile
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== GAME PAGE ===== -->
+    <div id="game-page" class="page-container" style="display:none;">
+        <div class="card">
+            <div class="logo-header">
+                <span class="logo-p">p</span>
+                <span class="logo-type">type</span>
+                <span class="logo-2">2</span>
+            </div>
+            
+            <h2 class="title">LEVEL <span id="current-level">1</span></h2>
+            
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-label">WPM:</span>
+                    <span id="wpm-stat" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Accuracy:</span>
+                    <span id="accuracy-stat" class="stat-value">100%</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Time:</span>
+                    <span id="time-stat" class="stat-value">0s</span>
+                </div>
+            </div>
+            
+            <div id="game-container">
+                <div id="text-display" tabindex="0"></div>
+                <div id="progress-bar"></div>
+            </div>
+            
+            <button id="back-to-levels" class="btn btn-secondary" style="margin-top: 20px;">
+                ← Back to Levels
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="src/firebase/config.js"></script>
+    <script src="src/firebase/auth.js"></script>
+    <script src="src/js/auth-ui.js"></script>
+    <script src="src/js/app.js"></script>
+</body>
 </html>
